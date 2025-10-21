@@ -5,6 +5,9 @@
   "description": "Confetti Gun with just 1 click.",
   "icon": "icon-confetti.png",
   "author": "peduarte",
+  "contributors": [
+    "brycedriesenga"
+  ],
   "categories": [
     "Fun"
   ],
