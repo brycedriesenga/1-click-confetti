@@ -1,15 +1,11 @@
-import {
-  environment,
-  LaunchType,
-  MenuBarExtra,
-} from "@raycast/api";
+import { environment, LaunchType, MenuBarExtra } from "@raycast/api";
 import { useEffect, useMemo, useState } from "react";
 import { shootConfetti } from "./common";
 import { loadConfettiConfiguration } from "./presets";
 
 export default function Command() {
   const configuration = useMemo(() => loadConfettiConfiguration(), []);
-  const [hasFired, setHasFired] = useState(false); 
+  const [hasFired, setHasFired] = useState(false);
   const { activePreset, preferences } = configuration;
 
   useEffect(() => {
