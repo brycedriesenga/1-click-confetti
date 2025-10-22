@@ -20,6 +20,38 @@
       "required": false,
       "default": true,
       "label": "Enable sound"
+    },
+    {
+      "name": "defaultEmojis",
+      "description": "Emoji used when the command is triggered",
+      "type": "textfield",
+      "required": false,
+      "title": "Default emojis",
+      "default": "🎉🎊🥳✨"
+    },
+    {
+      "name": "defaultIcon",
+      "description": "Icon (emoji or image) displayed in the menu bar",
+      "type": "textfield",
+      "required": false,
+      "title": "Default icon",
+      "placeholder": "Defaults to the first emoji"
+    },
+    {
+      "name": "defaultPresetName",
+      "description": "Name of the preset to use as the default (must match a custom preset)",
+      "type": "textfield",
+      "required": false,
+      "title": "Default preset name",
+      "placeholder": "Leave empty to use Default emojis"
+    },
+    {
+      "name": "emojiPresets",
+      "description": "One custom preset per line using the format: Name | 🎉🎊 | Optional Icon",
+      "type": "textfield",
+      "required": false,
+      "title": "Emoji presets",
+      "placeholder": "Celebration | 🎉🎊; Fire Drill | 🔥🚒"
     }
   ],
   "commands": [
