@@ -2,7 +2,6 @@ import { getPreferenceValues } from "@raycast/api";
 
 export interface ConfettiPreferences {
   confettiSound: boolean;
-  defaultEmojis?: string;
   defaultIcon?: string;
   defaultPresetName?: string;
   emojiPresets?: string;
@@ -11,7 +10,7 @@ export interface ConfettiPreferences {
 export interface ConfettiPreset {
   id: string;
   name: string;
-  emojis: string;
+  emojis: string | undefined;
   icon?: string;
   isDefault?: boolean;
   isCustom?: boolean;
@@ -19,7 +18,6 @@ export interface ConfettiPreset {
 
 export interface ConfettiConfiguration {
   preferences: Required<Pick<ConfettiPreferences, "confettiSound">> & {
-    defaultEmojis: string;
     defaultIcon?: string;
     defaultPresetName?: string;
   };
@@ -27,32 +25,31 @@ export interface ConfettiConfiguration {
   activePreset: ConfettiPreset;
 }
 
-const FALLBACK_EMOJIS = "🎉🎊🥳✨🎈🎆";
 const DEFAULT_PRESET_NAME = "Default Confetti";
 
 export function loadConfettiConfiguration(): ConfettiConfiguration {
   const preferences = getPreferenceValues<ConfettiPreferences>();
 
-  const normalizedDefaultEmojis = sanitizeEmojiString(preferences.defaultEmojis, {
-    fallback: FALLBACK_EMOJIS,
-  })!;
-
-  const defaultPreset = buildPreset({
-    id: "default",
-    name: DEFAULT_PRESET_NAME,
-    emojis: normalizedDefaultEmojis,
-    icon: resolveIcon(preferences.defaultIcon, normalizedDefaultEmojis),
-    isDefault: true,
-  });
-
+  // 1. Parse custom presets first
   const customPresets = parseCustomPresets(preferences.emojiPresets ?? "");
 
+  // 2. Find the desired default preset
   const desiredDefaultName = preferences.defaultPresetName?.trim().toLowerCase();
   const presetMatch = desiredDefaultName
     ? customPresets.find((preset) => preset.name.toLowerCase() === desiredDefaultName)
     : undefined;
 
-  const activePreset = presetMatch ?? defaultPreset;
+  // 3. Create a fallback preset that uses the standard Raycast confetti (emojis: undefined)
+  const fallbackPreset = buildPreset({
+    id: "default",
+    name: DEFAULT_PRESET_NAME,
+    emojis: undefined, // This will trigger the base deeplink
+    icon: resolveIcon(preferences.defaultIcon, undefined), // Pass undefined to icon resolver
+    isDefault: true,
+  });
+
+  // 4. Determine the active preset
+  const activePreset = presetMatch ?? fallbackPreset;
   if (presetMatch) {
     presetMatch.isDefault = true;
   }
@@ -60,11 +57,10 @@ export function loadConfettiConfiguration(): ConfettiConfiguration {
   return {
     preferences: {
       confettiSound: preferences.confettiSound ?? true,
-      defaultEmojis: normalizedDefaultEmojis,
       defaultIcon: preferences.defaultIcon,
       defaultPresetName: preferences.defaultPresetName,
     },
-    presets: [defaultPreset, ...customPresets],
+    presets: [fallbackPreset, ...customPresets], // 'presets' is used by your 'confetti-no-view' command
     activePreset,
   };
 }
@@ -121,10 +117,14 @@ function buildPreset(preset: ConfettiPreset): ConfettiPreset {
   };
 }
 
-function resolveIcon(icon: string | undefined, emojis: string): string | undefined {
+function resolveIcon(icon: string | undefined, emojis: string | undefined): string | undefined {
   const trimmedIcon = icon?.trim();
   if (trimmedIcon) {
     return trimmedIcon;
+  }
+
+  if (!emojis) {
+    return "🎉"; // Provide a fallback icon if no emojis are set
   }
 
   const graphemes = toGraphemeArray(emojis);

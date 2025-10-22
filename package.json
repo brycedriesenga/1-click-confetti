@@ -12,6 +12,9 @@
     "Fun"
   ],
   "license": "MIT",
+  "overrides": {
+    "@types/react": "^18.3.26"
+  },
   "preferences": [
     {
       "name": "confettiSound",
@@ -22,16 +25,8 @@
       "label": "Enable sound"
     },
     {
-      "name": "defaultEmojis",
-      "description": "Emoji used when the command is triggered",
-      "type": "textfield",
-      "required": false,
-      "title": "Default emojis",
-      "default": "🎉🎊🥳✨"
-    },
-    {
       "name": "defaultIcon",
-      "description": "Icon (emoji or image) displayed in the menu bar",
+      "description": "Icon (emoji) displayed in the menu bar",
       "type": "textfield",
       "required": false,
       "title": "Default icon",
@@ -39,19 +34,19 @@
     },
     {
       "name": "defaultPresetName",
-      "description": "Name of the preset to use as the default (must match a custom preset)",
+      "description": "Name of the preset to use as the default (must match a custom preset). Leave empty to use the standard Raycast confetti.",
       "type": "textfield",
       "required": false,
-      "title": "Default preset name",
-      "placeholder": "Leave empty to use Default emojis"
+      "title": "Preset to use as default",
+      "placeholder": "e.g., Celebration"
     },
     {
       "name": "emojiPresets",
-      "description": "One custom preset per line using the format: Name | 🎉🎊 | Optional Icon",
+      "description": "Enter custom presets separated by a semicolon (`;`). Format: Name | 🎉🎊 | Optional Icon",
       "type": "textfield",
       "required": false,
       "title": "Emoji presets",
-      "placeholder": "Celebration | 🎉🎊; Fire Drill | 🔥🚒"
+      "placeholder": "Celebration | 🎉🎊 | 🥳; Fire Drill | 🔥🚒; Money | 💰💸"
     }
   ],
   "commands": [
@@ -69,13 +64,13 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.53.3",
+    "@raycast/api": "^1.103.4",
     "@raycast/utils": "^1.4.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.6",
     "@types/node": "^18.8.3",
-    "@types/react": "^17.0.28",
+    "@types/react": "^18.3.26",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
     "typescript": "^4.4.3"
